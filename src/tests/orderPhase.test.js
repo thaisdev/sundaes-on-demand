@@ -80,3 +80,28 @@ test("order phases for happy path", async () => {
   await screen.findByRole("spinbutton", { name: "Vanilla" });
   await screen.findByRole("checkbox", { name: "Cherries" });
 });
+
+test("should'nt show toppings heading when order hasn't toppings", async () => {
+  render(<App />);
+
+  const vanillaInput = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "2");
+
+  const orderSummaryButton = await screen.findByRole("button", {
+    name: /order sundae/i,
+  });
+  userEvent.click(orderSummaryButton);
+
+  const scoopsHeading = screen.getByRole("heading", { name: "Scoops: $4.00" });
+  expect(scoopsHeading).toBeInTheDocument();
+
+  const toppingsHeading = screen.queryByRole("heading", {
+    name: /toppings/i,
+  });
+  expect(toppingsHeading).not.toBeInTheDocument();
+
+  expect(screen.getByText("2 Vanilla")).toBeInTheDocument();
+});
