@@ -3,6 +3,7 @@ import {
   screen,
   waitFor,
 } from "../../../test-utils/testing-library-utils";
+import userEvent from "@testing-library/user-event";
 import OrderEntry from "../OrderEntry";
 import { rest } from "msw";
 import { server } from "../../../mocks/server";
@@ -26,4 +27,24 @@ test("handles error for scoops and toppings routes", async () => {
 
     expect(alerts).toHaveLength(2);
   });
+});
+
+test("disable order button", async () => {
+  render(<OrderEntry setOrderPhase={jest.fn()} />);
+
+  const orderSummaryButton = await screen.findByRole("button", {
+    name: /order sundae/i,
+  });
+  expect(orderSummaryButton).toBeDisabled();
+
+  const vanillaInput = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "1");
+  expect(orderSummaryButton).toBeEnabled();
+
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "0");
+  expect(orderSummaryButton).toBeDisabled();
 });
