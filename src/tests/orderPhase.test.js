@@ -47,6 +47,10 @@ test("order phases for happy path", async () => {
   });
   userEvent.click(confirmOrderButton);
 
+  // should show loading while save order and get order number
+  const showLoading = screen.getByText(/loading/i);
+  expect(showLoading).toBeInTheDocument();
+
   // confirm order number on confirmatrion page
   const thankYouHeader = await screen.findByRole("heading", {
     name: /thank you/i,
@@ -55,6 +59,10 @@ test("order phases for happy path", async () => {
 
   const orderNumber = await screen.findByText(/your order number is [0-9]+/i);
   expect(orderNumber).toBeInTheDocument();
+
+  // should hide loading before save order and get order number
+  const hideLoading = screen.queryByText(/loading/i);
+  expect(hideLoading).not.toBeInTheDocument();
 
   // click new order button on confirmation page
   const createNewOrderButton = await screen.findByRole("button", {
