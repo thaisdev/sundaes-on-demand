@@ -68,6 +68,7 @@ describe("grand total", () => {
     const chocolateInput = await screen.findByRole("spinbutton", {
       name: "Chocolate",
     });
+    userEvent.clear(chocolateInput);
     userEvent.type(chocolateInput, "2");
     expect(grandTotal).toHaveTextContent("4.00");
 
@@ -91,6 +92,7 @@ describe("grand total", () => {
     const vanillaInput = await screen.findByRole("spinbutton", {
       name: "Vanilla",
     });
+    userEvent.clear(vanillaInput);
     userEvent.type(vanillaInput, "1");
     expect(grandTotal).toHaveTextContent("3.50");
   });
@@ -114,6 +116,7 @@ describe("grand total", () => {
     userEvent.type(chocolateInput, "2");
     expect(grandTotal).toHaveTextContent("5.50");
 
+    userEvent.clear(chocolateInput);
     userEvent.type(chocolateInput, "1");
     expect(grandTotal).toHaveTextContent("3.50");
 
